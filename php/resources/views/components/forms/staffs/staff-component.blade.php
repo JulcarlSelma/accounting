@@ -51,6 +51,7 @@
 </form>
 
 @push('js')
+    @once
     <script>
         document.addEventListener('change', function (e) {
             if (e.target && e.target.id === 'staff_id') {
@@ -68,4 +69,5 @@
             }
         });
     </script>
+    @endonce
 @endpush

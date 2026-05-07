@@ -33,15 +33,21 @@ class SerialNumberController extends Controller
     public function store(Product $product, SerialNumberRequest $request)
     {
         $params = $request->validated();
+        $params['product_id'] = $product->id;
         $result = $this->service->create($params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.index')->withErrors($result['errors']);
+            return redirect()->route('products.serial_number.index', [
+                'product' => $product->id
+            ])->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
-            return $value !== null && $value !== '' && $value !== 'null';
-        }));
+        return redirect()->route('products.serial_number.index', array_merge(
+            ['product' => $product->id],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            }
+        )));
     }
 
     /**
@@ -50,15 +56,21 @@ class SerialNumberController extends Controller
     public function update(Product $product, SerialNumberRequest $request, int $id)
     {
         $params = $request->validated();
+        $params['product_id'] = $product->id;
         $result = $this->service->update($id, $params)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.index')->withErrors($result['errors']);
+            return redirect()->route('products.serial_number.index', [
+                'product' => $product->id
+            ])->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
-            return $value !== null && $value !== '' && $value !== 'null';
-        }));
+        return redirect()->route('products.serial_number.index', array_merge(
+            ['product' => $product->id],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            }
+        )));
     }
 
     /**
@@ -68,12 +80,17 @@ class SerialNumberController extends Controller
     {
         $result = $this->service->delete($id)->getData(true);
         if (isset($result['errors']) && !empty($result['errors'])) {
-            return redirect()->route('products.index')->withErrors($result['errors']);
+            return redirect()->route('products.serial_number.index', [
+                'product' => $product->id
+            ])->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.index', array_filter(request()->query(), function($value) {
-            return $value !== null && $value !== '' && $value !== 'null';
-        }));
+        return redirect()->route('products.serial_number.index', array_merge(
+            ['product' => $product->id],
+            array_filter(request()->query(), function($value) {
+                return $value !== null && $value !== '' && $value !== 'null';
+            }
+        )));
     }
 }

@@ -12,7 +12,7 @@ class SerialNumberRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,9 @@ class SerialNumberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'serial_number' => 'required|max:100',
+            'sku' => 'nullable|max:100',
+            'status' => 'required|in:'.implode(",", config('const.serial_numbers_status')),
         ];
     }
 }
