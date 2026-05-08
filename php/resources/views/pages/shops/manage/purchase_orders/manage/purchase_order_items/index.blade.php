@@ -138,7 +138,6 @@ $thead = [
                 // --- EDIT Logic ---
                 if (editBtn) {
                     const rowData = JSON.parse(editBtn.closest('td').getAttribute('data-pass'));
-                    console.log(['rowData', rowData])
                     
                     // 1. Change Modal Header
                     modalTitle.innerText = 'Edit Item Quantity: ' + rowData.product.name;

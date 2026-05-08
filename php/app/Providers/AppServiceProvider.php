@@ -102,5 +102,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.forms.purchase-order-item.purchase-order-modify-component', 'purchase-order-modify-form');
         Blade::component('components.forms.purchase-order-item.edit-purchase-order-item-component', 'edit-purchase-order-item-form');
         Blade::component('components.forms.purchase-order-item.delete-purchase-order-item-component', 'delete-purchase-order-item-form');
+        Blade::component('components.forms.serial-number.delete-serial-number-component', 'delete-serial-number-form');
     }
 }
