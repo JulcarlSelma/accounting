@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Suppliers;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Suppliers\SupplierRepository;
+use App\Http\Services\BaseService;
 
 class SupplierService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new SupplierRepository();
+        $this->repository = new SupplierRepository;
     }
 
     public function all(array $params = [])

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Products\UnitsSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\Products\UnitsSeeder;
 
 class DatabaseSeeder extends Seeder
 {

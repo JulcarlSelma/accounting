@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Products;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Products\UnitRepository;
+use App\Http\Services\BaseService;
 
-class UnitService Extends BaseService
+class UnitService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new UnitRepository();
+        $this->repository = new UnitRepository;
     }
 
     public function all(array $params = [])

@@ -13,12 +13,12 @@
     <div class="flex flex-row justify-between">
         <div class="flex flex-col min-w-0">
             <small class="truncate">{{$product->name}}</small>
-            <small class="text-xs text-gray-400">{{$product->brand->name}}</small>
+            <small class="text-xs text-gray-400">{{$product->brand ? $product->brand->name : ''}}</small>
             <small class="text-xs">{{$product->unitDisplayText}}</small>
         </div>
         @if($isShowTrash)
             <div class="{{$trashClassContainer}}">
-                <x-trash-icon class="deleteActionButton {{$trashClassIcon}}" data-id="{{$idToDelete}}" data-name="{{$product->name}}" />
+                <x-trash-icon class="deleteActionButton {{$trashClassIcon}}" data-id="{{$idToDelete}}" data-name="{{$product ? $product->name : ''}}" />
             </div>
         @endif
     </div>

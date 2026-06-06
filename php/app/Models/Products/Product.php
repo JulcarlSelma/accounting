@@ -2,16 +2,13 @@
 
 namespace App\Models\Products;
 
+use App\Casts\BarcodeCast;
+use App\Casts\ImageCast;
+use App\Models\Shops\PurchaseOrderItem;
+use App\Models\Suppliers\SuppliersProduct;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Models\Products\Brand;
-use App\Models\Products\Category;
-use App\Models\Products\Unit;
-use App\Models\Suppliers\SuppliersProduct;
-use App\Casts\ImageCast;
-use App\Casts\BarcodeCast;
-use App\Models\Shops\PurchaseOrderItem;
 
 class Product extends Model
 {

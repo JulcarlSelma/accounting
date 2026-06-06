@@ -2,19 +2,18 @@
 
 namespace App\Http\Services\Shops;
 
-use App\Http\Services\BaseService;
-use App\Http\Services\Shops\ShopStaffService;
 use App\Http\Repositories\Shops\StaffRepository;
+use App\Http\Services\BaseService;
 
 class StaffService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new StaffRepository();
-        $this->service = new ShopStaffService();
+        $this->repository = new StaffRepository;
+        $this->service = new ShopStaffService;
     }
 
-    public function all(array $params = [], int $shopId)
+    public function all(array $params, int $shopId)
     {
         return $this->repository->all($params, $shopId);
     }
@@ -22,7 +21,7 @@ class StaffService extends BaseService
     public function create(array $params = [])
     {
         $staffId = $params['staff_id'] ?? null;
-        if (!isset($staffId)) {
+        if (! isset($staffId)) {
             $staffParams = [
                 'first_name' => $params['first_name'],
                 'middle_name' => $params['middle_name'] ?? null,
@@ -48,6 +47,7 @@ class StaffService extends BaseService
             'hire_date' => $params['hire_date'],
             'is_active' => $params['is_active'] ?? null,
         ];
+
         return $this->service->create($shopStaffParams);
     }
 
@@ -64,7 +64,7 @@ class StaffService extends BaseService
             'address' => $params['address'] ?? null,
             'profile_path_remove' => $params['profile_path_remove'] ?? null,
         ];
-        $staffParams = array_filter($staffParams, function($value) {
+        $staffParams = array_filter($staffParams, function ($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $staffResult = $this->repository->update($id, $staffParams)->getData(true);
@@ -78,6 +78,7 @@ class StaffService extends BaseService
             'hire_date' => $params['hire_date'],
             'is_active' => $params['is_active'] ?? null,
         ];
+
         return $this->service->update($id, $shopStaffParams);
     }
 

@@ -2,21 +2,21 @@
 
 namespace App\Http\Repositories\Suppliers;
 
-use DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Product;
 use App\Models\Suppliers\SuppliersProduct;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class SuppliersProductRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new SuppliersProduct();
+        $this->model = new SuppliersProduct;
         $this->models = [
-            'product' => new Product()
+            'product' => new Product,
         ];
     }
 
@@ -36,6 +36,7 @@ class SuppliersProductRepository extends BaseRepository
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -49,7 +50,7 @@ class SuppliersProductRepository extends BaseRepository
         $nameParam = isset($params['name']) ? $params['name'] : null;
         $brandParam = isset($params['brand_id']) ? $params['brand_id'] : null;
         $categoryParam = isset($params['category_id']) ? $params['category_id'] : null;
-        
+
         if ($nameParam) {
             $query->whereHas('products', function ($productQuery) use ($nameParam) {
                 $productQuery->whereLike('name', '%'.$nameParam.'%');
@@ -57,13 +58,13 @@ class SuppliersProductRepository extends BaseRepository
         }
 
         if ($brandParam && $brandParam !== 'All') {
-            $query->whereHas('products.brand', function($brandQuery) use($brandParam) {
+            $query->whereHas('products.brand', function ($brandQuery) use ($brandParam) {
                 $brandQuery->where('id', $brandParam);
             });
         }
 
         if ($categoryParam && $categoryParam !== 'All') {
-            $query->whereHas('products.category', function($categoryQuery) use($categoryParam) {
+            $query->whereHas('products.category', function ($categoryQuery) use ($categoryParam) {
                 $categoryQuery->where('id', $categoryParam);
             });
         }
@@ -77,42 +78,45 @@ class SuppliersProductRepository extends BaseRepository
             return $this->error('Empty parameters', [], $this->badRequest);
         }
 
-
         try {
             DB::beginTransaction();
             $result = $this->model->insert($params);
-            if (!$result) {
+            if (! $result) {
                 return $this->error('Failed to add products', [], $this->internalServerError);
             }
             DB::commit();
             $products = $this->all($supplierId);
+
             return $this->success($products, 'Products was added succesfully');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $suppliersProduct = $this->model->find($id);
 
-            if (!isset($suppliersProduct)) {
+            if (! isset($suppliersProduct)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $suppliersProduct->delete();
             DB::commit();
+
             return $this->success([], 'Product was removed successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

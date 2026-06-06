@@ -25,6 +25,7 @@ class UnitRequest extends FormRequest
     {
         // Ensure we get the ID regardless of whether it's a string or a Model
         $unitId = $this->route('unit')?->id ?? $this->route('unit');
+
         return [
             'name' => [
                 'required',
@@ -38,14 +39,14 @@ class UnitRequest extends FormRequest
                 'max:5',
                 Rule::unique('units', 'abbreviation')->ignore($unitId),
             ],
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            // This converts 'true', '1', 'on' to a real boolean true, 
+            // This converts 'true', '1', 'on' to a real boolean true,
             // and missing/null values to false.
             'is_active' => $this->boolean('is_active'),
         ]);

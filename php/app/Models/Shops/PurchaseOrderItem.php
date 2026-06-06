@@ -2,11 +2,9 @@
 
 namespace App\Models\Shops;
 
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Casts\DateCast;
-use App\Models\Shops\PurchaseOrder;
-use App\Models\Products\Product;
 
 class PurchaseOrderItem extends Model
 {

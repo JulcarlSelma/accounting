@@ -20,7 +20,7 @@ $thead = [
 @endphp
 
 @section('content')
-    <article>
+    <article class="flex flex-col flex-1 min-h-0">
         <x-filter-form
             route="{{route('products.categories.index')}}"
         >
@@ -63,6 +63,7 @@ $thead = [
             titleClass="text-lg font-semibold text-gray-800"
             :booleanMessage="[0 => 'In Active', 1 => 'Active']"
             customNoDataMessage="No categories found. Please adjust your filters or change page."
+            tableContainerClass="flex-1 lg:overflow-y-none h-full"
         >
             <x-slot:rightPocket>
                 <x-button id="addCategory" variant="success" data-modal-open class="rounded-md text-md">Add</x-button>

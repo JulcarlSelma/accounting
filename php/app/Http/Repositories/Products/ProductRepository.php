@@ -2,23 +2,21 @@
 
 namespace App\Http\Repositories\Products;
 
-use DB;
-use Exception;
-use Illuminate\Support\Str;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
+use App\Helper\FileHelper;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Product;
-use App\Helper\FileHelper;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class ProductRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Product();
-        $this->helper = new FileHelper();
+        $this->model = new Product;
+        $this->helper = new FileHelper;
     }
 
     public function all(array $params = [])
@@ -27,16 +25,17 @@ class ProductRepository extends BaseRepository
             $query = $this->model->with([
                 'brand',
                 'category',
-                'unitR'
+                'unitR',
             ]);
 
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -58,19 +57,19 @@ class ProductRepository extends BaseRepository
         }
 
         if ($brandParam && $brandParam !== 'All') {
-            $query->whereHas('brand', function($brandQuery) use($brandParam) {
+            $query->whereHas('brand', function ($brandQuery) use ($brandParam) {
                 $brandQuery->where('id', $brandParam);
             });
         }
 
         if ($categoryParam && $categoryParam !== 'All') {
-            $query->whereHas('category', function($categoryQuery) use($categoryParam) {
+            $query->whereHas('category', function ($categoryQuery) use ($categoryParam) {
                 $categoryQuery->where('id', $categoryParam);
             });
         }
 
         if ($unitParam && $unitParam !== 'All') {
-            $query->whereHas('unitR', function($unitQuery) use($unitParam) {
+            $query->whereHas('unitR', function ($unitQuery) use ($unitParam) {
                 $unitQuery->where('id', $unitParam);
             });
         }
@@ -100,19 +99,21 @@ class ProductRepository extends BaseRepository
                 $logoPath = $this->helper->uploadFile($logoFile, config('const.product_logo_path').'product/'.$product->id);
                 $product->update(['logo_path' => $logoPath]);
             }
-            
+
             DB::commit();
+
             return $this->success($product, 'Product created successfully!');
         } catch (Exception $e) {
             DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -123,14 +124,14 @@ class ProductRepository extends BaseRepository
         try {
             $product = $this->model->find($id);
 
-            if (!isset($product)) {
+            if (! isset($product)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
             $logoPathRemove = $params['logo_path_remove'];
 
-            if ($logoPathRemove && !$logoFile) {
+            if ($logoPathRemove && ! $logoFile) {
                 $params['logo_path'] = null;
                 if ($product->logo_path) {
                     $this->helper->deleteFile($product->getRawOriginal('logo_path'));
@@ -146,34 +147,38 @@ class ProductRepository extends BaseRepository
             $product->update($params);
             $newProduct = $this->model->find($id);
             DB::commit();
+
             return $this->success($newProduct, 'Product updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $product = $this->model->find($id);
 
-            if (!isset($product)) {
+            if (! isset($product)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
             $product->delete();
             DB::commit();
+
             return $this->success([], 'Product deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

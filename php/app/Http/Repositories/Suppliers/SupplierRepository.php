@@ -2,21 +2,21 @@
 
 namespace App\Http\Repositories\Suppliers;
 
-use DB;
-use Exception;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
+use App\Helper\FileHelper;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Suppliers\Supplier;
-use App\Helper\FileHelper;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class SupplierRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Supplier();
-        $this->helper = new FileHelper();
+        $this->model = new Supplier;
+        $this->helper = new FileHelper;
     }
 
     public function all(array $params = [])
@@ -27,10 +27,11 @@ class SupplierRepository extends BaseRepository
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -100,17 +101,19 @@ class SupplierRepository extends BaseRepository
             }
 
             DB::commit();
+
             return $this->success($supplier, 'Supplier created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -121,7 +124,7 @@ class SupplierRepository extends BaseRepository
         try {
             $supplier = $this->model->find($id);
 
-            if (!isset($supplier)) {
+            if (! isset($supplier)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
@@ -129,7 +132,7 @@ class SupplierRepository extends BaseRepository
             $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
             $logoPathRemove = $params['logo_path_remove'];
 
-            if ($logoPathRemove && !$logoFile) {
+            if ($logoPathRemove && ! $logoFile) {
                 $params['logo_path'] = null;
                 if ($supplier->logo_path) {
                     $this->helper->deleteFile($supplier->getRawOriginal('logo_path'));
@@ -145,33 +148,37 @@ class SupplierRepository extends BaseRepository
             $supplier->update($params);
             $newSupplier = $this->model->find($id);
             DB::commit();
+
             return $this->success($newSupplier, 'Supplier updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $supplier = $this->model->find($id);
 
-            if (!isset($supplier)) {
+            if (! isset($supplier)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $supplier->delete();
             DB::commit();
+
             return $this->success([], 'Supplier deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
@@ -190,7 +197,6 @@ class SupplierRepository extends BaseRepository
         if (empty($params)) {
             return $query;
         }
-
 
         $isPricing = isset($params['is_pricing']) ? $params['is_pricing'] : null;
         $isNoSelectedItems = isset($params['is_no_selected_products']) ? $params['is_no_selected_products'] : null;
@@ -213,9 +219,9 @@ class SupplierRepository extends BaseRepository
                 },
                 'pricings.product',
             ])
-            ->whereHas('pricings', function ($pricingQuery) use ($isPricing) {
-                $pricingQuery->where('is_active', $isPricing);
-            });
+                ->whereHas('pricings', function ($pricingQuery) use ($isPricing) {
+                    $pricingQuery->where('is_active', $isPricing);
+                });
         }
 
         return $query;

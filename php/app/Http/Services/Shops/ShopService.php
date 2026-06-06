@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Shops;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Shops\ShopRepository;
+use App\Http\Services\BaseService;
 
 class ShopService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new ShopRepository();
+        $this->repository = new ShopRepository;
     }
 
     public function all(array $params = [])

@@ -25,6 +25,7 @@ class ProductRequest extends FormRequest
     {
         // Ensure we get the ID regardless of whether it's a string or a Model
         $productId = $this->route('product')?->id ?? $this->route('product');
+
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -40,14 +41,14 @@ class ProductRequest extends FormRequest
                 Rule::unique('products', 'barcode')->ignore($productId),
             ],
             'logo_path_remove' => 'boolean',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            // This converts 'true', '1', 'on' to a real boolean true, 
+            // This converts 'true', '1', 'on' to a real boolean true,
             // and missing/null values to false.
             'is_active' => $this->boolean('is_active'),
             'logo_path_remove' => $this->boolean('logo_path_remove'),

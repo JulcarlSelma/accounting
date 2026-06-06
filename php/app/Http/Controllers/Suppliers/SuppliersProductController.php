@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Suppliers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Suppliers\SupplierProductRequest;
-use App\Models\Suppliers\Supplier;
 use App\Http\Services\Suppliers\SuppliersProductService;
+use App\Models\Suppliers\Supplier;
+use Illuminate\Http\Request;
 
 class SuppliersProductController extends Controller
 {
     public function __construct()
     {
-        $this->service = new SuppliersProductService();
+        $this->service = new SuppliersProductService;
     }
 
     /**
@@ -24,6 +24,7 @@ class SuppliersProductController extends Controller
         $products = $this->service->dropdown($supplier->id);
         $supplierProducts = $this->service->all($supplier->id, $params);
         $dropdowns = $this->service->dropdowns();
+
         return view('pages.suppliers.manage.products.index', compact('supplier', 'products', 'supplierProducts', 'dropdowns'));
     }
 
@@ -34,17 +35,18 @@ class SuppliersProductController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->insert($supplier->id, $params)->getData(true);
-        if (isset($result['errors']) && !empty($result['errors'])) {
+        if (isset($result['errors']) && ! empty($result['errors'])) {
             return redirect()->route('suppliers.product.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
+
         return redirect()->route('suppliers.product.index', array_merge(
             ['supplier' => $supplier],
-            array_filter(request()->query(), function($value) {
+            array_filter(request()->query(), function ($value) {
                 return $value !== null && $value !== '' && $value !== 'null';
             }
-        )));
+            )));
     }
 
     /**
@@ -53,14 +55,15 @@ class SuppliersProductController extends Controller
     public function destroy(Supplier $supplier, string $id)
     {
         $result = $this->service->delete($id)->getData(true);
-        if (isset($result['errors']) && !empty($result['errors'])) {
+        if (isset($result['errors']) && ! empty($result['errors'])) {
             return redirect()->route('suppliers.product.index', $supplier->id)->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
+
         return redirect()->route('suppliers.product.index', array_merge(
             ['supplier' => $supplier->id],
-            array_filter(request()->query(), function($value) {
+            array_filter(request()->query(), function ($value) {
                 return $value !== null && $value !== '' && $value !== 'null';
             })
         ));

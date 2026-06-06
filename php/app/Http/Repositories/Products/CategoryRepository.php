@@ -2,24 +2,24 @@
 
 namespace App\Http\Repositories\Products;
 
-use DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Category;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class CategoryRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Category();
+        $this->model = new Category;
     }
 
-    public function all(array $params = []) : ?LengthAwarePaginator
+    public function all(array $params = []): ?LengthAwarePaginator
     {
-        try {            
+        try {
             $query = $this->model->query();
 
             $query = $this->filters($query, $params);
@@ -29,6 +29,7 @@ class CategoryRepository extends BaseRepository
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -64,17 +65,19 @@ class CategoryRepository extends BaseRepository
             DB::beginTransaction();
             $category = $this->model->create($params);
             DB::commit();
+
             return $this->success($category, 'Category created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -85,7 +88,7 @@ class CategoryRepository extends BaseRepository
         try {
             $category = $this->model->find($id);
 
-            if (!isset($category)) {
+            if (! isset($category)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
@@ -94,33 +97,37 @@ class CategoryRepository extends BaseRepository
 
             $newCategory = $this->model->find($id);
             DB::commit();
+
             return $this->success($newCategory, 'Category updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $category = $this->model->find($id);
 
-            if (!isset($category)) {
+            if (! isset($category)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $category->delete();
             DB::commit();
+
             return $this->success([], 'Category deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

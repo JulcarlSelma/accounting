@@ -14,7 +14,7 @@ class Category extends Model
     public $fillable = [
         'name',
         'description',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [

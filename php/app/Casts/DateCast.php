@@ -15,7 +15,7 @@ class DateCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 

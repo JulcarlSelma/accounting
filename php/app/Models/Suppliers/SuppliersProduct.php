@@ -2,9 +2,8 @@
 
 namespace App\Models\Suppliers;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Products\Product;
-use App\Models\Suppliers\Supplier;
+use Illuminate\Database\Eloquent\Model;
 
 class SuppliersProduct extends Model
 {

@@ -27,6 +27,8 @@ nginx:
 	docker compose exec nginx sh
 php:
 	docker compose exec php bash
+pint:
+	docker compose exec php bash vendor/bin/pint
 migrate:
 	@read -p "WARNING: This will Migrate a new migration. Continue? [y/N] " ans; \
 	if [[ "$$ans" =~ ^[Yy]$$ ]]; then \

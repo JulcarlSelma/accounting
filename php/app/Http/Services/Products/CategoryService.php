@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Products;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Products\CategoryRepository;
+use App\Http\Services\BaseService;
 
 class CategoryService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new CategoryRepository();
+        $this->repository = new CategoryRepository;
     }
 
     public function all(array $params = [])

@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Products;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Products\SerialNumberRepository;
+use App\Http\Services\BaseService;
 
 class SerialNumberService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new SerialNumberRepository();
+        $this->repository = new SerialNumberRepository;
     }
 
     public function all(array $params = [])

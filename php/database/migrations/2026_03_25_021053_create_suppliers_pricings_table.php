@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('RESTRICT');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('RESTRICT');
             // INDEXES
-            $table->index(['product_id','supplier_id', 'is_active']);
+            $table->index(['product_id', 'supplier_id', 'is_active']);
         });
     }
 

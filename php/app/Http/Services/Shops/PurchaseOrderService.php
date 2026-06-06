@@ -2,19 +2,18 @@
 
 namespace App\Http\Services\Shops;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Shops\PurchaseOrderRepository;
-use App\Http\Services\Shops\PurchaseOrderItemService;
+use App\Http\Services\BaseService;
 use App\Http\Services\Suppliers\SupplierService;
 
 class PurchaseOrderService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new PurchaseOrderRepository();
+        $this->repository = new PurchaseOrderRepository;
         $this->services = [
-            'po_item' => new PurchaseOrderItemService(),
-            'supplier' => new SupplierService(),
+            'po_item' => new PurchaseOrderItemService,
+            'supplier' => new SupplierService,
         ];
     }
 
@@ -43,7 +42,7 @@ class PurchaseOrderService extends BaseService
         }
         $purchaseOrderId = $purchaseOrder['data']['id'];
 
-        $purchaseOrderItemsParams = array_map(function ($value) use($purchaseOrderId) {
+        $purchaseOrderItemsParams = array_map(function ($value) use ($purchaseOrderId) {
             return [
                 'purchase_order_id' => $purchaseOrderId,
                 'product_id' => $value['product_id'],
@@ -52,13 +51,38 @@ class PurchaseOrderService extends BaseService
                 'total' => $value['quantity'] * $value['price'],
             ];
         }, $params['product_ids']);
-        
+
         $purchaseOrderItems = $this->services['po_item']->insert($purchaseOrderId, $purchaseOrderItemsParams)->getData(true);
         if (isset($purchaseOrderItems['errors'])) {
             return $this->repository->error('Failed to add purchase order items', $purchaseOrderItems['errors'], $this->repository->internalServerError);
         }
 
         return $this->repository->success($purchaseOrder['data'], $purchaseOrder['message']);
+    }
+
+    public function addItems(int $purchaseOrderId, array $params = [])
+    {
+        $purchaseOrderItemsParams = array_map(function ($value) use ($purchaseOrderId) {
+            return [
+                'purchase_order_id' => $purchaseOrderId,
+                'product_id' => $value['product_id'],
+                'quantity' => $value['quantity'],
+                'price' => $value['price'],
+                'total' => $value['quantity'] * $value['price'],
+            ];
+        }, $params['product_ids']);
+        $purchaseOrderItems = $this->services['po_item']->insert($purchaseOrderId, $purchaseOrderItemsParams);
+
+        $total = array_sum(array_map(function ($value) {
+            return $value['quantity'] * $value['price'];
+        }, $params['product_ids']));
+
+        $result2 = $this->repository->updateTotal($purchaseOrderId, [
+            'subtotal' => $total,
+            'total' => $total,
+        ]);
+
+        return $purchaseOrderItems;
     }
 
     public function update(int $id, array $params = [])
@@ -69,6 +93,7 @@ class PurchaseOrderService extends BaseService
     public function delete(int $id)
     {
         $purchaseOrder = $this->repository->delete($id)->getData(true);
+
         // TODO:: add PurchaseOrder Item
         return $this->repository->success();
     }
@@ -81,7 +106,7 @@ class PurchaseOrderService extends BaseService
     public function dropdowns(array $params = [])
     {
         return [
-            'suppliers' => $this->services['supplier']->dropdown($params)
+            'suppliers' => $this->services['supplier']->dropdown($params),
         ];
     }
 }

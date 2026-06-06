@@ -3,7 +3,6 @@
 namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SerialNumbers extends Model
@@ -17,7 +16,7 @@ class SerialNumbers extends Model
         'serial_number',
         'sku',
         'status',
-        'note'
+        'note',
     ];
 
     public function product()

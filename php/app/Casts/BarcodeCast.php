@@ -15,13 +15,13 @@ class BarcodeCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 
         return [
             'img' => DNS1D::getBarcodeHTML($value, 'C128', 2, 50),
-            'value' => $value
+            'value' => $value,
         ];
     }
 

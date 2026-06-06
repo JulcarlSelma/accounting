@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Products;
 
-use App\Http\Services\BaseService;
 use App\Http\Repositories\Products\BrandRepository;
+use App\Http\Services\BaseService;
 
 class BrandService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new BrandRepository();
+        $this->repository = new BrandRepository;
     }
 
     public function all(array $params = [])

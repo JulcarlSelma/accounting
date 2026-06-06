@@ -2,11 +2,10 @@
 
 namespace App\Models\Suppliers;
 
+use App\Casts\ImageCast;
+use App\Models\Shops\PurchaseOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Casts\ImageCast;
-use App\Models\Suppliers\Pricing;
-use App\Models\Shops\PurchaseOrder;
 
 class Supplier extends Model
 {

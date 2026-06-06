@@ -3,27 +3,29 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Services\Products\UnitService;
 use App\Http\Requests\Products\UnitRequest;
+use App\Http\Services\Products\UnitService;
+use Illuminate\Http\Request;
 
 class UnitsController extends Controller
 {
     public function __construct()
     {
-        $this->service = new UnitService();
+        $this->service = new UnitService;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $params = $request->all();
-        $params = array_filter($params, function($value) {
+        $params = array_filter($params, function ($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         });
         $units = $this->service->all($params);
         $unitsDropdown = $this->service->dropdown(true);
+
         return view('pages.products.units.index', compact('units', 'unitsDropdown'));
     }
 
@@ -34,12 +36,13 @@ class UnitsController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->create($params)->getData(true);
-        if (isset($result['errors']) && !empty($result['errors'])) {
+        if (isset($result['errors']) && ! empty($result['errors'])) {
             return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.units.index', array_filter(request()->query(), function($value) {
+
+        return redirect()->route('products.units.index', array_filter(request()->query(), function ($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }
@@ -51,12 +54,13 @@ class UnitsController extends Controller
     {
         $params = $request->validated();
         $result = $this->service->update($id, $params)->getData(true);
-        if (isset($result['errors']) && !empty($result['errors'])) {
+        if (isset($result['errors']) && ! empty($result['errors'])) {
             return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.units.index', array_filter(request()->query(), function($value) {
+
+        return redirect()->route('products.units.index', array_filter(request()->query(), function ($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }
@@ -67,12 +71,13 @@ class UnitsController extends Controller
     public function destroy(int $id)
     {
         $result = $this->service->delete($id)->getData(true);
-        if (isset($result['errors']) && !empty($result['errors'])) {
+        if (isset($result['errors']) && ! empty($result['errors'])) {
             return redirect()->route('products.brands.index')->withErrors($result['errors']);
         }
 
         session()->flash('success', $result['message']);
-        return redirect()->route('products.units.index', array_filter(request()->query(), function($value) {
+
+        return redirect()->route('products.units.index', array_filter(request()->query(), function ($value) {
             return $value !== null && $value !== '' && $value !== 'null';
         }));
     }

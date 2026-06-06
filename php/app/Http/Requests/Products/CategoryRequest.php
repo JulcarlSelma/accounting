@@ -25,6 +25,7 @@ class CategoryRequest extends FormRequest
     {
         // Ensure we get the ID regardless of whether it's a string or a Model
         $categoryId = $this->route('category')?->id ?? $this->route('category');
+
         return [
             'name' => [
                 'required',
@@ -33,14 +34,14 @@ class CategoryRequest extends FormRequest
                 Rule::unique('categories', 'name')->ignore($categoryId),
             ],
             'description' => 'nullable|string',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            // This converts 'true', '1', 'on' to a real boolean true, 
+            // This converts 'true', '1', 'on' to a real boolean true,
             // and missing/null values to false.
             'is_active' => $this->boolean('is_active'),
         ]);

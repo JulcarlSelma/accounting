@@ -38,7 +38,7 @@ class SupplierRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            // This converts 'true', '1', 'on' to a real boolean true, 
+            // This converts 'true', '1', 'on' to a real boolean true,
             // and missing/null values to false.
             'is_active' => $this->boolean('is_active'),
             'logo_path_remove' => $this->boolean('logo_path_remove'),

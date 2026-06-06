@@ -23,7 +23,7 @@ class SupplierProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_ids' => 'required'
+            'product_ids' => 'required',
         ];
     }
 }

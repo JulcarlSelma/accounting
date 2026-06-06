@@ -2,9 +2,9 @@
 
 namespace App\Models\Shops;
 
+use App\Casts\ImageCast;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Casts\ImageCast;
 
 class Shop extends Model
 {

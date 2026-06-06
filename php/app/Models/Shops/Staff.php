@@ -2,10 +2,9 @@
 
 namespace App\Models\Shops;
 
+use App\Casts\ImageCast;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Casts\ImageCast;
-use App\Models\Shops\ShopStaff;
 
 class Staff extends Model
 {
@@ -31,10 +30,10 @@ class Staff extends Model
     ];
 
     protected $appends = ['fullname'];
-    
+
     public function getFullnameAttribute()
     {
-        return $this->first_name.' '.($this->middle_name ? $this->middle_name.' ':'').$this->last_name;
+        return $this->first_name.' '.($this->middle_name ? $this->middle_name.' ' : '').$this->last_name;
     }
 
     public function shops()

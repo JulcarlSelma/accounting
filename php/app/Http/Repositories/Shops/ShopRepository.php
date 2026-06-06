@@ -2,21 +2,21 @@
 
 namespace App\Http\Repositories\Shops;
 
-use DB;
-use Exception;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
+use App\Helper\FileHelper;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Shops\Shop;
-use App\Helper\FileHelper;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class ShopRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Shop();
-        $this->helper = new FileHelper();
+        $this->model = new Shop;
+        $this->helper = new FileHelper;
     }
 
     public function all(array $params = [])
@@ -27,10 +27,11 @@ class ShopRepository extends BaseRepository
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -100,17 +101,19 @@ class ShopRepository extends BaseRepository
             }
 
             DB::commit();
+
             return $this->success($shop, 'Shop created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -121,7 +124,7 @@ class ShopRepository extends BaseRepository
         try {
             $shop = $this->model->find($id);
 
-            if (!isset($shop)) {
+            if (! isset($shop)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
@@ -129,7 +132,7 @@ class ShopRepository extends BaseRepository
             $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
             $logoPathRemove = $params['logo_path_remove'];
 
-            if ($logoPathRemove && !$logoFile) {
+            if ($logoPathRemove && ! $logoFile) {
                 $params['logo_path'] = null;
                 if ($shop->logo_path) {
                     $this->helper->deleteFile($shop->getRawOriginal('logo_path'));
@@ -145,33 +148,37 @@ class ShopRepository extends BaseRepository
             $shop->update($params);
             $newShop = $this->model->find($id);
             DB::commit();
+
             return $this->success($newShop, 'Shop updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $shop = $this->model->find($id);
 
-            if (!isset($shop)) {
+            if (! isset($shop)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $shop->delete();
             DB::commit();
+
             return $this->success([], 'Shop deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

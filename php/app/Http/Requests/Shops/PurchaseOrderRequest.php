@@ -22,22 +22,31 @@ class PurchaseOrderRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->routeIs('shops.purchase-orders.items')) {
+            return [
+                'product_ids' => 'required',
+                'subtotal' => 'required',
+                'total' => 'required',
+            ];
+        }
+
         $purchaseOrderId = $this->route('purchase_order')?->id ?? $this->route('purchase_order');
         if (isset($purchaseOrderId)) {
             return [
                 'order_date' => 'required|date',
                 'expected_date' => 'nullable|date',
                 'status' => 'nullable',
-                'notes' => 'nullable'
+                'notes' => 'nullable',
             ];
         }
+
         return [
             'supplier_id' => 'required|exists:suppliers,id',
             'order_date' => 'required|date',
             'expected_date' => 'nullable|date',
             'product_ids' => 'required',
             'subtotal' => 'required',
-            'total' => 'required'
+            'total' => 'required',
         ];
     }
 }

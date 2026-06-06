@@ -2,25 +2,25 @@
 
 namespace App\Http\Repositories\Products;
 
+use App\Http\Repositories\BaseRepository;
+use App\Models\Products\SerialNumbers;
 use DB;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Products\SerialNumbers;
-use App\Http\Repositories\BaseRepository;
+use Illuminate\Support\Facades\Log;
 
 class SerialNumberRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new SerialNumbers();
+        $this->model = new SerialNumbers;
     }
 
-    public function all(array $params = []) 
+    public function all(array $params = [])
     {
         try {
             $query = $this->model->with([
-                'product'
+                'product',
             ]);
 
             $query = $this->filters($query, $params);
@@ -28,6 +28,7 @@ class SerialNumberRepository extends BaseRepository
             return $query->paginate(10)->withQueryString();
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.'function: '.$e);
+
             return null;
         }
     }
@@ -67,10 +68,12 @@ class SerialNumberRepository extends BaseRepository
             DB::beginTransaction();
             $serialNumber = $this->model->create($params);
             DB::commit();
+
             return $this->success($serialNumber, 'Serial number was added to this product successfully!');
         } catch (Exception $e) {
             DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
 
@@ -78,7 +81,7 @@ class SerialNumberRepository extends BaseRepository
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -89,41 +92,45 @@ class SerialNumberRepository extends BaseRepository
         try {
             $serialNumber = $this->model->find($id);
 
-            if (!isset($serialNumber)) {
+            if (! isset($serialNumber)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $serialNumber->update($params);
             $newSerialNumber = $this->model->find($id);
             DB::commit();
+
             return $this->success($newSerialNumber, 'Details updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $serialNumber = $this->model->find($id);
 
-            if (!isset($serialNumber)) {
+            if (! isset($serialNumber)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
             $serialNumber->delete();
             DB::commit();
+
             return $this->success([], 'Details deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

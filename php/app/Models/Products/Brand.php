@@ -2,9 +2,9 @@
 
 namespace App\Models\Products;
 
+use App\Casts\ImageCast;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Casts\ImageCast;
 
 class Brand extends Model
 {
@@ -16,7 +16,7 @@ class Brand extends Model
         'name',
         'description',
         'logo_path',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [

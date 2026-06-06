@@ -30,7 +30,7 @@ class StaffRequest extends FormRequest
                 'is_active' => 'boolean',
                 'employment_status' => [
                     'nullable',
-                    Rule::in(config('const.employment_status'))
+                    Rule::in(config('const.employment_status')),
                 ],
                 'hire_date' => 'nullable',
             ];
@@ -50,7 +50,7 @@ class StaffRequest extends FormRequest
             'shop_ids' => 'required',
             'employment_status' => [
                 'nullable',
-                Rule::in(config('const.employment_status'))
+                Rule::in(config('const.employment_status')),
             ],
             'hire_date' => 'nullable',
         ];
@@ -59,7 +59,7 @@ class StaffRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            // This converts 'true', '1', 'on' to a real boolean true, 
+            // This converts 'true', '1', 'on' to a real boolean true,
             // and missing/null values to false.
             'is_active' => $this->boolean('is_active'),
             'profile_path_remove' => $this->boolean('profile_path_remove'),

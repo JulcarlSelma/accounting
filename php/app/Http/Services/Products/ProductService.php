@@ -2,21 +2,18 @@
 
 namespace App\Http\Services\Products;
 
-use App\Http\Services\BaseService;
-use App\Http\Services\Products\BrandService;
-use App\Http\Services\Products\CategoryService;
-use App\Http\Services\Products\UnitService;
 use App\Http\Repositories\Products\ProductRepository;
+use App\Http\Services\BaseService;
 
 class ProductService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new ProductRepository();
+        $this->repository = new ProductRepository;
         $this->services = [
-            'brand' => new BrandService(),
-            'category' => new CategoryService(),
-            'unit' => new UnitService(),
+            'brand' => new BrandService,
+            'category' => new CategoryService,
+            'unit' => new UnitService,
         ];
     }
 

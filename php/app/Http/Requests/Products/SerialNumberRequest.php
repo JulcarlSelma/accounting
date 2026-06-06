@@ -25,8 +25,8 @@ class SerialNumberRequest extends FormRequest
         return [
             'serial_number' => 'required|max:100',
             'sku' => 'nullable|max:100',
-            'status' => 'required|in:'.implode(",", config('const.serial_numbers_status')),
-            'note' => 'nullable'
+            'status' => 'required|in:'.implode(',', config('const.serial_numbers_status')),
+            'note' => 'nullable',
         ];
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Models\Suppliers;
 
+use App\Casts\DateCast;
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Products\Product;
-use App\Models\Suppliers\Supplier;
-use App\Casts\DateCast;
 
 class Pricing extends Model
 {
@@ -18,12 +17,12 @@ class Pricing extends Model
         'product_id',
         'supplier_id',
         'price',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'updated_at' => DateCast::class
+        'updated_at' => DateCast::class,
     ];
 
     public function product()

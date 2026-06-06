@@ -2,21 +2,21 @@
 
 namespace App\Http\Repositories\Products;
 
-use DB;
-use Exception;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
+use App\Helper\FileHelper;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Products\Brand;
-use App\Helper\FileHelper;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class BrandRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Brand();
-        $this->helper = new FileHelper();
+        $this->model = new Brand;
+        $this->helper = new FileHelper;
     }
 
     public function all(array $params = [])
@@ -27,10 +27,11 @@ class BrandRepository extends BaseRepository
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -73,19 +74,21 @@ class BrandRepository extends BaseRepository
                 $logoPath = $this->helper->uploadFile($logoFile, config('const.product_logo_path').'brands/'.$brand->id);
                 $brand->update(['logo_path' => $logoPath]);
             }
-            
+
             DB::commit();
+
             return $this->success($brand, 'Brand created successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -96,14 +99,14 @@ class BrandRepository extends BaseRepository
         try {
             $brand = $this->model->find($id);
 
-            if (!isset($brand)) {
+            if (! isset($brand)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $logoFile = isset($params['logo_path']) ? $params['logo_path'] : null;
             $logoPathRemove = $params['logo_path_remove'];
 
-            if ($logoPathRemove && !$logoFile) {
+            if ($logoPathRemove && ! $logoFile) {
                 $params['logo_path'] = null;
                 if ($brand->logo_path) {
                     $this->helper->deleteFile($brand->getRawOriginal('logo_path'));
@@ -119,33 +122,37 @@ class BrandRepository extends BaseRepository
             $brand->update($params);
             $newBrand = $this->model->find($id);
             DB::commit();
+
             return $this->success($newBrand, 'Brand updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $brand = $this->model->find($id);
 
-            if (!isset($brand)) {
+            if (! isset($brand)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             DB::beginTransaction();
             $brand->delete();
             DB::commit();
+
             return $this->success([], 'Brand deleted successfully!');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

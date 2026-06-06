@@ -2,19 +2,19 @@
 
 namespace App\Http\Services\Suppliers;
 
+use App\Http\Repositories\Suppliers\SuppliersProductRepository;
 use App\Http\Services\BaseService;
 use App\Http\Services\Products\BrandService;
 use App\Http\Services\Products\CategoryService;
-use App\Http\Repositories\Suppliers\SuppliersProductRepository;
 
 class SuppliersProductService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new SuppliersProductRepository();
+        $this->repository = new SuppliersProductRepository;
         $this->services = [
-            'brand' => new BrandService(),
-            'category' => new CategoryService(),
+            'brand' => new BrandService,
+            'category' => new CategoryService,
         ];
     }
 
@@ -22,10 +22,10 @@ class SuppliersProductService extends BaseService
     {
         return $this->repository->all($supplierId, $params);
     }
-    
+
     public function insert(int $supplierId, array $params = [])
     {
-        $insertParams = array_map(function ($id) use($supplierId) {
+        $insertParams = array_map(function ($id) use ($supplierId) {
             return [
                 'product_id' => $id,
                 'supplier_id' => $supplierId,

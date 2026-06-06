@@ -2,18 +2,18 @@
 
 namespace App\Http\Repositories\Suppliers;
 
-use DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Suppliers\Pricing;
+use DB;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class PricingRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Pricing();
+        $this->model = new Pricing;
     }
 
     public function all(?int $supplierId = null, array $params = [])
@@ -22,16 +22,17 @@ class PricingRepository extends BaseRepository
             $query = $this->model->with([
                 'product.brand',
                 'product.category',
-                'product.unitR'
+                'product.unitR',
             ])->where('supplier_id', $supplierId);
 
             $query = $this->filters($query, $params);
 
             $data = $query->paginate(10)->withQueryString();
-            
+
             return $data;
         } catch (Exception $e) {
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return null;
         }
     }
@@ -59,13 +60,13 @@ class PricingRepository extends BaseRepository
         }
 
         if ($brandParam && $brandParam !== 'All') {
-            $query->whereHas('product.brand', function($brandQuery) use($brandParam) {
+            $query->whereHas('product.brand', function ($brandQuery) use ($brandParam) {
                 $brandQuery->where('id', $brandParam);
             });
         }
 
         if ($categoryParam && $categoryParam !== 'All') {
-            $query->whereHas('product.category', function($categoryQuery) use($categoryParam) {
+            $query->whereHas('product.category', function ($categoryQuery) use ($categoryParam) {
                 $categoryQuery->where('id', $categoryParam);
             });
         }
@@ -94,17 +95,19 @@ class PricingRepository extends BaseRepository
             $price = $this->model->create($params);
 
             DB::commit();
+
             return $this->success($price, 'Price created successfully!');
         } catch (Exception $e) {
             DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function update(int $id, array $params = [])
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
@@ -123,7 +126,7 @@ class PricingRepository extends BaseRepository
                     ->update(['is_active' => false]);
             }
 
-            if (!isset($price)) {
+            if (! isset($price)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
             $price->update($params);
@@ -134,30 +137,33 @@ class PricingRepository extends BaseRepository
         } catch (Exception $e) {
             DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }
 
     public function delete(int $id)
     {
-        if (!$id) {
+        if (! $id) {
             return $this->error('ID should be present', [], $this->badRequest);
         }
 
         try {
             $price = $this->model->find($id);
 
-            if (!isset($price)) {
+            if (! isset($price)) {
                 return $this->error('Data not found', [], $this->notFound);
             }
 
             DB::beginTransaction();
             $price->delete();
             DB::commit();
+
             return $this->success([], 'Price deleted successfully!');
         } catch (Exception $e) {
             DB::rollback();
             Log::error(get_class().': '.__FUNCTION__.' function: '.$e);
+
             return $this->error('Something went wrong!', [$e->getMessage()], $this->internalServerError);
         }
     }

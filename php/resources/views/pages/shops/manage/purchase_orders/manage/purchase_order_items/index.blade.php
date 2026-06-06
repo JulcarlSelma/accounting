@@ -130,7 +130,7 @@ $thead = [
                     if(form.querySelector('input[name="_method"]')) {
                         form.querySelector('[name="_method"]').remove();
                     }
-                    const baseUrl = "{{ route('products.units.store') }}"; // Blade generates base URL
+                    const baseUrl = "{{ route('shops.purchase-orders.items', [$shop->id, $purchase_order->id]) }}"; // Blade generates base URL
                     const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                     form.action = params ? `${baseUrl}?${params}` : baseUrl;
                 }
@@ -150,7 +150,7 @@ $thead = [
                     form.querySelector('[name="quantity"]').value = rowData.quantity;
                     form.querySelector('[name="total"]').value = rowData.total;
                     
-                    const baseUrl = "{{ route('shops.staffs.update', [$shop->id, ':id']) }}"; // Blade generates base URL
+                    const baseUrl = "{{ route('shops.purchase-order-items.update', [$shop->id, $purchase_order->id, ':id']) }}"; // Blade generates base URL
                     const params = new URLSearchParams(@json(request()->query())).toString(); // JS
                     const urlTemplate = params ? `${baseUrl}?${params}` : baseUrl;
                     form.action = urlTemplate.replace(':id', rowData.id);

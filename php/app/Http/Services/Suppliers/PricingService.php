@@ -2,21 +2,20 @@
 
 namespace App\Http\Services\Suppliers;
 
+use App\Http\Repositories\Suppliers\PricingRepository;
 use App\Http\Services\BaseService;
 use App\Http\Services\Products\BrandService;
 use App\Http\Services\Products\CategoryService;
-use App\Http\Repositories\Suppliers\PricingRepository;
-use App\Http\Services\Suppliers\SuppliersProductService;
 
 class PricingService extends BaseService
 {
     public function __construct()
     {
-        $this->repository = new PricingRepository();
+        $this->repository = new PricingRepository;
         $this->services = [
-            'brand' => new BrandService(),
-            'category' => new CategoryService(),
-            'suppliersProduct' => new SuppliersProductService(),
+            'brand' => new BrandService,
+            'category' => new CategoryService,
+            'suppliersProduct' => new SuppliersProductService,
         ];
     }
 

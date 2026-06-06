@@ -8,16 +8,23 @@ use Symfony\Component\HttpFoundation\Response;
 class BaseRepository
 {
     protected $model;
+
     public $badRequest = Response::HTTP_BAD_REQUEST;
+
     public $unauthorized = Response::HTTP_UNAUTHORIZED;
+
     public $forbidden = Response::HTTP_FORBIDDEN;
+
     public $notFound = Response::HTTP_NOT_FOUND;
+
     public $internalServerError = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     // For Helper
     protected $helper = null;
+
     // For multiple helpers
     protected $helpers = [];
+
     // For multiple models
     protected $models = [];
 
